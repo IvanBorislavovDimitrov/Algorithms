@@ -1,4 +1,4 @@
-package com.ivan.algorythms;
+package com.ivan.algorithms;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,30 +17,31 @@ public class LongestIncreasingSequence {
 	}
 
 	private static List<Integer> findLis(int[] arr) {
-		List<List<Integer>> cache = new ArrayList<>();
+		List<List<Integer>> sequences = new ArrayList<List<Integer>>();
+		
 		for (int i = 0; i < arr.length; i++) {
-			cache.add(new ArrayList<>());
+			sequences.add(new ArrayList<Integer>());
 		}
-
-		cache.get(0).add(arr[0]);
-
+		
+		sequences.get(0).add(arr[0]);
+		
 		for (int i = 1; i < arr.length; i++) {
 			for (int j = 0; j < i; j++) {
-				if (arr[i] > arr[j] && cache.get(i).size() < cache.get(j).size()) {
-					cache.set(i, new ArrayList<>(cache.get(j)));
+				if ((arr[i] > arr[j]) && (sequences.get(i).size() < sequences.get(j).size())) {
+					sequences.set(i, new ArrayList<Integer>(sequences.get(j)));
 				}
 			}
-			cache.get(i).add(arr[i]);
+			sequences.get(i).add(arr[i]);
 		}
-
-		List<Integer> longest = cache.get(0);
-		for (int i = 0; i < cache.size(); i++) {
-			if (longest.size() < cache.get(i).size()) {
-				longest = new ArrayList<>(cache.get(i));
+		
+		List<Integer> max = sequences.get(0);
+		for (int i = 1; i < sequences.size(); i++) {
+			if (max.size() < sequences.get(i).size()) {
+				max = sequences.get(i);
 			}
 		}
-
-		return longest;
+		
+		return max;
 	}
 
 }
