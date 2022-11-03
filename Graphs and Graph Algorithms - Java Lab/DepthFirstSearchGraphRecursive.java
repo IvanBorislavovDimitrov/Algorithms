@@ -3,7 +3,7 @@ package lab.tasks;
 import java.io.IOException;
 import java.util.*;
 
-public class TopologicalSortWithDFS {
+public class DepthFirstSearchGraphRecursive {
 
     public static void main(String[] args) throws IOException {
         Graph graph = new Graph();
@@ -13,12 +13,7 @@ public class TopologicalSortWithDFS {
         graph.addEdges("D", List.of("C", "F"));
         graph.addEdges("E", List.of("D"));
         graph.addEdges("F", List.of());
-        Stack<String> tasks = graph.topologicalSort();
-        String res = "";
-        while (!tasks.isEmpty()) {
-            res += tasks.pop() + " ";
-        }
-        System.out.println(res);
+        graph.dfs();
     }
 
     private static class Graph {
@@ -33,34 +28,32 @@ public class TopologicalSortWithDFS {
             adjacentNodes.put(node, nodes);
         }
 
-        public Stack<String> topologicalSort() {
+        public void dfs() {
             Set<String> visited = new HashSet<>();
-            Stack<String> sortedTasks = new Stack<>();
             Set<String> cycleNodes = new HashSet<>();
             for (Map.Entry<String, List<String>> adjacentNode : adjacentNodes.entrySet()) {
                 if (!visited.contains(adjacentNode.getKey())) {
-                    dfs(adjacentNode.getKey(), visited, cycleNodes, sortedTasks);
+                    System.out.print("Connected components: ");
+                    traverseDfs(adjacentNode.getKey(), adjacentNodes, cycleNodes, visited);
+                    System.out.println();
                 }
             }
-            return sortedTasks;
         }
 
-        private void dfs(String node, Set<String> visited, Set<String> cycleNodes, Stack<String> sortedTasks) {
+        private void traverseDfs(String node, Map<String, List<String>> adjacentNodes, Set<String> cycleNodes, Set<String> visited) {
             if (cycleNodes.contains(node)) {
                 throw new IllegalStateException("Cycle has been detected!");
             }
             if (!visited.contains(node)) {
                 visited.add(node);
                 cycleNodes.add(node);
-                List<String> childNodes = adjacentNodes.get(node);
-                for (String childNode : childNodes) {
-                    dfs(childNode, visited, cycleNodes, sortedTasks);
+                for (String childNode : adjacentNodes.get(node)) {
+                    traverseDfs(childNode, adjacentNodes, cycleNodes, visited);
                 }
                 cycleNodes.remove(node);
-                sortedTasks.push(node);
+                System.out.print(node + " ");
             }
         }
-
     }
 
 }

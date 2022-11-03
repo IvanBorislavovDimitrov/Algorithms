@@ -1,4 +1,4 @@
-package com.test;
+package lab.tasks;
 
 import java.io.IOException;
 import java.util.*;
